@@ -1,0 +1,1 @@
+/usr/src/xen_build_from_xen_source/xen-4.1.2/tools/ioemu-qemu-xen/tests/cris/.gdbinit
