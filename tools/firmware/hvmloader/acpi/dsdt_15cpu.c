@@ -5,7 +5,7 @@
  * Copyright (c) 2000 - 2010 Intel Corporation
  * Supports ACPI Specification Revision 4.0a
  * 
- * Compilation of "dsdt_15cpu.asl" - Sun Jan 29 22:41:47 2012
+ * Compilation of "dsdt_15cpu.asl" - Fri Feb 10 12:32:25 2012
  * 
  * C source code output
  * AML code block contains 0xFE05 bytes

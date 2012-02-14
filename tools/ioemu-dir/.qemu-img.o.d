@@ -39,12 +39,6 @@ qemu-img.o: \
  /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/xenstore/xs.h \
  /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/xenstore/xs_lib.h \
  /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/xs_wire.h \
- /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/blktap/lib/blktaplib.h \
- /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/blkif.h \
- /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/ring.h \
- /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/../xen-compat.h \
- /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/../grant_table.h \
- /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/ring.h \
  /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/ioemu-qemu-xen/osdep.h \
  /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/ioemu-qemu-xen/bswap.h \
  /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/ioemu-qemu-xen/qemu_socket.h \
@@ -131,18 +125,6 @@ config-host.h:
 /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/xenstore/xs_lib.h:
 
 /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/xs_wire.h:
-
-/usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/blktap/lib/blktaplib.h:
-
-/usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/blkif.h:
-
-/usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/ring.h:
-
-/usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/../xen-compat.h:
-
-/usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/../grant_table.h:
-
-/usr/src/xen_build_from_xen_source/xen-4.1.2/tools/../tools/include/xen/io/ring.h:
 
 /usr/src/xen_build_from_xen_source/xen-4.1.2/tools/ioemu-qemu-xen/osdep.h:
 

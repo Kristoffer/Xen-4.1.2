@@ -15,9 +15,9 @@ public/tmem.h
 public/trace.h
 public/vcpu.h
 public/version.h
-public/xencomm.h
 public/xen-compat.h
 public/xen.h
+public/xencomm.h
 public/xenoprof.h
 public/hvm/e820.h
 public/hvm/hvm_info_table.h

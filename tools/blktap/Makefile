@@ -1,13 +1,32 @@
-XEN_ROOT = $(CURDIR)/../..
-include $(XEN_ROOT)/tools/Rules.mk
+BLKTAP_ROOT := .
+include $(BLKTAP_ROOT)/Rules.mk
 
 SUBDIRS-y :=
-SUBDIRS-y += lib
+SUBDIRS-y += include
+SUBDIRS-y += lvm
+SUBDIRS-y += part
+SUBDIRS-y += vhd
 SUBDIRS-y += drivers
+SUBDIRS-y += control
 
-.PHONY: all clean install
-all clean install: %: subdirs-%
+.PHONY: all
+all: build
 
+.PHONY: build
+build:
+	@set -e; for subdir in $(SUBDIRS-y); do \
+	$(MAKE) -C $$subdir all;       \
+		done
+
+.PHONY: install
 install:
-	$(INSTALL_DIR) $(DESTDIR)$(DOCDIR)
-	$(INSTALL_DATA) README $(DESTDIR)$(DOCDIR)/README.blktap
+	@set -e; for subdir in $(SUBDIRS-y); do \
+		$(MAKE) -C $$subdir install; \
+	done
+
+.PHONY: clean
+clean:
+	rm -rf *.a *.so *.o *.rpm $(LIB) *~ $(DEPS) TAGS
+	@set -e; for subdir in $(SUBDIRS-y); do \
+	$(MAKE) -C $$subdir clean;       \
+		done

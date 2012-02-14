@@ -33,8 +33,6 @@ PATH: /usr/sbin
 PATH: /usr/bin
 PATH: /sbin
 PATH: /bin
-PATH: /opt/dell/srvadmin/bin
-PATH: /opt/dell/srvadmin/sbin
 PATH: /opt/dell/srvadmin/sbin
 
 

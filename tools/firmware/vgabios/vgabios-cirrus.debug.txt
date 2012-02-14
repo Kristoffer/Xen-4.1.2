@@ -146,7 +146,7 @@
 00146 003E                        63            .ascii "current-cvs"
 00147 0049                        20            .ascii " "
 00148                       0000004A            vgabios_date:
-00149 004A                        32            .ascii "29 Jan 2012"
+00149 004A                        31            .ascii "10 Feb 2012"
 00150 0055                        0A            .byte 0x0a,0x0d
 00151 0057                        00            .byte 0x00
 00152                       00000058            vgabios_copyright:

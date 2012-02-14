@@ -412,7 +412,7 @@
 00412 0038                        63            .ascii "current-cvs"
 00413 0043                        20            .ascii " "
 00414                       00000044            vgabios_date:
-00415 0044                        32            .ascii "29 Jan 2012"
+00415 0044                        31            .ascii "10 Feb 2012"
 00416 004F                        0A            .byte 0x0a,0x0d
 00417 0051                        00            .byte 0x00
 00418                       00000052            vgabios_copyright:

@@ -1,69 +1,88 @@
-XEN_ROOT = $(CURDIR)/../../..
-include $(XEN_ROOT)/tools/Rules.mk
+BLKTAP_ROOT= ..
+include $(BLKTAP_ROOT)/Rules.mk
 
-IBIN         = blktapctrl tapdisk
-QCOW_UTIL    = img2qcow qcow2raw qcow-create
-LIBAIO_DIR   = ../../libaio/src
-MEMSHR_DIR   = ../../memshr
+LIBVHDDIR  = $(BLKTAP_ROOT)/vhd/lib
 
-CFLAGS   += -Werror
-CFLAGS   += -Wno-unused
-CFLAGS   += -I../lib
-CFLAGS   += $(CFLAGS_libxenctrl)
-CFLAGS   += $(CFLAGS_libxenstore)
-CFLAGS   += -I $(LIBAIO_DIR)
-CFLAGS   += -I $(MEMSHR_DIR)
-CFLAGS   += -D_GNU_SOURCE
+IBIN       = tapdisk2 td-util td-rated tapdisk-stream
+LOCK_UTIL  = lock-util
+INST_DIR   = /usr/sbin
 
-ifeq ($(shell . ./check_gcrypt $(CC)),yes)
-CFLAGS += -DUSE_GCRYPT
-CRYPT_LIB := -lgcrypt
-else
-CRYPT_LIB := -lcrypto
-$(warning === libgcrypt not installed: falling back to libcrypto ===)
+CFLAGS    += -Werror -g
+CFLAGS    += -Wno-unused
+CFLAGS    += -fno-strict-aliasing
+CFLAGS    += -I../include
+CFLAGS    += -D_GNU_SOURCE
+CFLAGS    += -DUSE_NFS_LOCKS
+CFLAGS    += -DTAPDISK
+
+LIBS      += -lrt
+
+# Get gcc to generate the dependencies for us.
+CFLAGS    += -Wp,-MD,.$(@F).d
+DEPS       = .*.d
+
+tapdisk2 td-util tapdisk-stream tapdisk-diff: LIBS += -L$(LIBVHDDIR) -lvhd -luuid
+tapdisk2 tapdisk-stream tapdisk-diff: AIOLIBS := -laio
+
+ifeq ($(VHD_STATIC),y)
+td-util: CFLAGS += -static
 endif
 
-MEMSHRLIBS :=
-ifeq ($(CONFIG_Linux), y)
-CFLAGS += -DMEMSHR
-MEMSHRLIBS += $(MEMSHR_DIR)/libmemshr.a
-endif
+TAP-OBJS  := scheduler.o
+TAP-OBJS  += tapdisk-control.o
+TAP-OBJS  += tapdisk-vbd.o
+TAP-OBJS  += tapdisk-blktap.o
+TAP-OBJS  += tapdisk-image.o
+TAP-OBJS  += tapdisk-driver.o
+TAP-OBJS  += tapdisk-disktype.o
+TAP-OBJS  += tapdisk-interface.o
+TAP-OBJS  += tapdisk-server.o
+TAP-OBJS  += tapdisk-queue.o
+TAP-OBJS  += tapdisk-filter.o
+TAP-OBJS  += tapdisk-logfile.o
+TAP-OBJS  += tapdisk-log.o
+TAP-OBJS  += tapdisk-utils.o
+TAP-OBJS  += tapdisk-syslog.o
+TAP-OBJS  += tapdisk-stats.o
+TAP-OBJS  += tapdisk-storage.o
+TAP-OBJS  += tapdisk-loglimit.o
+TAP-OBJS  += io-optimize.o
+TAP-OBJS  += lock.o
 
-LDLIBS_blktapctrl := $(MEMSHRLIBS) $(LDLIBS_libxenctrl) $(LDLIBS_libxenstore) -L../lib -lblktap -lrt -lm -lpthread
-LDLIBS_img := $(LIBAIO_DIR)/libaio.a $(CRYPT_LIB) -lpthread -lz
+MISC-OBJS := atomicio.o
 
-BLK-OBJS-y  := block-aio.o
-BLK-OBJS-y  += block-sync.o
-BLK-OBJS-y  += block-vmdk.o
-BLK-OBJS-y  += block-ram.o
-BLK-OBJS-y  += block-qcow.o
-BLK-OBJS-y  += block-qcow2.o
-BLK-OBJS-y  += aes.o
-BLK-OBJS-y  += tapaio.o
-BLK-OBJS-$(CONFIG_Linux) += blk_linux.o
+BLK-OBJS  := block-aio.o
+BLK-OBJS  += block-ram.o
+BLK-OBJS  += block-cache.o
+BLK-OBJS  += block-vhd.o
+BLK-OBJS  += block-valve.o
+BLK-OBJS  += block-vindex.o
+BLK-OBJS  += block-lcache.o
+BLK-OBJS  += block-llcache.o
 
-BLKTAB-OBJS-y := blktapctrl.o
-BLKTAB-OBJS-$(CONFIG_Linux) += blktapctrl_linux.o
+all: $(IBIN) lock-util
 
-all: $(IBIN) qcow-util
+tapdisk2: $(TAP-OBJS) $(BLK-OBJS) $(MISC-OBJS) tapdisk2.c
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS) $(AIOLIBS)
 
-blktapctrl: $(BLKTAB-OBJS-y)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS_blktapctrl)
+tapdisk-client: tapdisk-client.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
-tapdisk: tapdisk.o $(BLK-OBJS-y)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^ $(LDLIBS_img)
+tapdisk-stream tapdisk-diff: %: %.o $(TAP-OBJS) $(BLK-OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS) $(AIOLIBS)
 
-.PHONY: qcow-util
-qcow-util: img2qcow qcow2raw qcow-create
+td-util: td.o tapdisk-utils.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
-img2qcow qcow2raw qcow-create: %: %.o $(BLK-OBJS-y)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $* $^ $(LDLIBS_img)
+lock-util: lock.c
+	$(CC) $(CFLAGS) -DUTIL -o lock-util lock.c $(LIBS)
 
 install: all
-	$(INSTALL_PROG) $(IBIN) $(QCOW_UTIL) $(VHD_UTIL) $(DESTDIR)$(SBINDIR)
+	$(INSTALL_DIR) -p $(DESTDIR)$(INST_DIR)
+	$(INSTALL_PROG) $(IBIN) $(LOCK_UTIL) $(DESTDIR)$(INST_DIR)
 
 clean:
-	rm -rf *.o *~ $(DEPS) xen TAGS $(IBIN) $(LIB) $(QCOW_UTIL) $(VHD_UTIL)
+	rm -rf *.o *~ $(DEPS) xen TAGS $(IBIN) $(LIB) $(LOCK_UTIL)
 
 .PHONY: clean install
 

@@ -1,5 +1,5 @@
-#define XEN_COMPILE_DATE	"Thu Feb  9 14:58:47 CET 2012"
-#define XEN_COMPILE_TIME	"14:58:47"
+#define XEN_COMPILE_DATE	"Fri Feb 10 12:48:04 CET 2012"
+#define XEN_COMPILE_TIME	"12:48:04"
 #define XEN_COMPILE_BY		"root"
 #define XEN_COMPILE_DOMAIN	"mccarthy.23hq.net"
 #define XEN_COMPILE_HOST	"node0301"

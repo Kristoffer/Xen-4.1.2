@@ -5,7 +5,7 @@
  * Copyright (c) 2000 - 2010 Intel Corporation
  * Supports ACPI Specification Revision 4.0a
  * 
- * Compilation of "ssdt_tpm.asl" - Sun Jan 29 22:41:47 2012
+ * Compilation of "ssdt_tpm.asl" - Fri Feb 10 12:32:24 2012
  * 
  * C source code output
  * AML code block contains 0x4C bytes
